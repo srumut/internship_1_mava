@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "mava_user_and_production_management",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
