@@ -10,15 +10,14 @@ import {
     NotFoundException,
     UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { AdminsService } from './admins.service';
+import { CreateAdminDto } from './dto/create-admin.dto';
+import { UpdateAdminDto } from './dto/update-admin.dto';
 import { AuthGuardAdmin } from 'src/auth/auth.guard.admin';
-import { AuthGuardUser } from 'src/auth/auth.guard.user';
 
-@Controller('users')
-export class UsersController {
-    constructor(private readonly service: UsersService) {}
+@Controller('admins')
+export class AdminsController {
+    constructor(private readonly service: AdminsService) {}
 
     @Get()
     @UseGuards(AuthGuardAdmin)
@@ -27,17 +26,18 @@ export class UsersController {
     }
 
     @Get(':id')
-    @UseGuards(AuthGuardUser)
+    @UseGuards(AuthGuardAdmin)
     async findById(@Param('id') id: string) {
-        const user = await this.service.findById(id);
-        if (!user) {
-            throw new NotFoundException(`No user with the id ${id} was found`);
+        const admin = await this.service.findById(id);
+        if (!admin) {
+            throw new NotFoundException(`No admin with the id ${id} was found`);
         }
-        return user;
+        return admin;
     }
 
     @Post()
-    async create(@Body() dto: CreateUserDto) {
+    @UseGuards(AuthGuardAdmin)
+    async create(@Body() dto: CreateAdminDto) {
         try {
             return await this.service.create(dto);
         } catch (error) {
@@ -59,7 +59,7 @@ export class UsersController {
             switch (error.code) {
                 case 'P2025':
                     throw new BadRequestException(
-                        `No user with the id ${id} was found`,
+                        `No admin with the id ${id} was found`,
                     );
             }
         }
@@ -67,14 +67,14 @@ export class UsersController {
 
     @Patch(':id')
     @UseGuards(AuthGuardAdmin)
-    async update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+    async update(@Param('id') id: string, @Body() dto: UpdateAdminDto) {
         try {
             return await this.service.update(id, dto);
         } catch (error) {
             switch (error.code) {
                 case 'P2025':
                     throw new BadRequestException(
-                        `No user with the id ${id} was found`,
+                        `No admin with the id ${id} was found`,
                     );
             }
         }

@@ -1,39 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateAdminDto } from './dto/create-admin.dto';
 import { v4 as uuid4 } from 'uuid';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateAdminDto } from './dto/update-admin.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class UsersService {
+export class AdminsService {
     constructor(private readonly db: DatabaseService) {}
 
-    findAll(): Promise<{ id: string; username: string }[]> {
-        return this.db.user.findMany({ select: { id: true, username: true } });
+    findAll() {
+        return this.db.admin.findMany({ select: { id: true, username: true } });
     }
 
     findById(id: string): Promise<{ id: string; username: string } | null> {
-        return this.db.user.findUnique({
+        return this.db.admin.findUnique({
             where: { id: id },
             select: { id: true, username: true },
         });
     }
 
-    create(dto: CreateUserDto): Promise<{ id: string; username: string }> {
+    create(dto: CreateAdminDto): Promise<{ id: string; username: string }> {
         const salt = bcrypt.genSaltSync(10);
-        return this.db.user.create({
+        return this.db.admin.create({
             data: {
                 id: uuid4(),
-                username: dto.username,
                 password: bcrypt.hashSync(dto.password, salt),
+                username: dto.username,
             },
             select: { id: true, username: true },
         });
     }
 
     delete(id: string): Promise<{ id: string; username: string }> {
-        return this.db.user.delete({
+        return this.db.admin.delete({
             where: { id: id },
             select: { id: true, username: true },
         });
@@ -41,14 +41,14 @@ export class UsersService {
 
     update(
         id: string,
-        dto: UpdateUserDto,
+        dto: UpdateAdminDto,
     ): Promise<{ id: string; username: string }> {
-        const data = { id, ...dto };
+        const data = { id: id, ...dto };
         if (data?.password) {
             const salt = bcrypt.genSaltSync(10);
             data.password = bcrypt.hashSync(data.password, salt);
         }
-        return this.db.user.update({
+        return this.db.admin.update({
             where: { id: id },
             data: data,
             select: { id: true, username: true },
@@ -58,6 +58,6 @@ export class UsersService {
     findByUsername(
         username: string,
     ): Promise<{ id: string; username: string; password: string } | null> {
-        return this.db.user.findUnique({ where: { username: username } });
+        return this.db.admin.findUnique({ where: { username: username } });
     }
 }

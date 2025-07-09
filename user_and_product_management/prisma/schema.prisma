@@ -29,3 +29,11 @@ model Product {
 
     @@map("product")
 }
+
+model Admin {
+    id       String @id
+    username String @unique
+    password String
+
+    @@map("admin")
+}
