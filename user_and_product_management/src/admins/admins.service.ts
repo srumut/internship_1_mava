@@ -4,6 +4,7 @@ import { CreateAdminDto } from './dto/create-admin.dto';
 import { v4 as uuid4 } from 'uuid';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import * as bcrypt from 'bcrypt';
+import { Admin } from 'generated/prisma';
 
 @Injectable()
 export class AdminsService {
@@ -13,36 +14,34 @@ export class AdminsService {
         return this.db.admin.findMany({ select: { id: true, username: true } });
     }
 
-    findById(id: string): Promise<{ id: string; username: string } | null> {
+    findById(id: string) {
         return this.db.admin.findUnique({
             where: { id: id },
-            select: { id: true, username: true },
+            omit: { password: true },
         });
     }
 
-    create(dto: CreateAdminDto): Promise<{ id: string; username: string }> {
+    create(dto: CreateAdminDto) {
         const salt = bcrypt.genSaltSync(10);
         return this.db.admin.create({
             data: {
                 id: uuid4(),
                 password: bcrypt.hashSync(dto.password, salt),
                 username: dto.username,
+                createdAt: new Date(),
             },
-            select: { id: true, username: true },
+            omit: { password: true },
         });
     }
 
-    delete(id: string): Promise<{ id: string; username: string }> {
+    delete(id: string) {
         return this.db.admin.delete({
             where: { id: id },
-            select: { id: true, username: true },
+            omit: { password: true },
         });
     }
 
-    update(
-        id: string,
-        dto: UpdateAdminDto,
-    ): Promise<{ id: string; username: string }> {
+    update(id: string, dto: UpdateAdminDto) {
         const data = { id: id, ...dto };
         if (data?.password) {
             const salt = bcrypt.genSaltSync(10);
@@ -51,13 +50,11 @@ export class AdminsService {
         return this.db.admin.update({
             where: { id: id },
             data: data,
-            select: { id: true, username: true },
+            omit: { password: true },
         });
     }
 
-    findByUsername(
-        username: string,
-    ): Promise<{ id: string; username: string; password: string } | null> {
+    findByUsername(username: string) {
         return this.db.admin.findUnique({ where: { username: username } });
     }
 }

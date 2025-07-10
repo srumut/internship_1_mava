@@ -11,4 +11,9 @@ export class CreateProductDto {
     @IsInt()
     @Min(0)
     stock: number;
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    brand_id: string;
 }

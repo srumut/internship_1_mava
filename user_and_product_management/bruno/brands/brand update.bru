@@ -1,11 +1,11 @@
 meta {
-  name: create a product
+  name: brand update
   type: http
   seq: 3
 }
 
-post {
-  url: {{host}}/products
+patch {
+  url: {{host}}/brands/a1d1c67f-1f63-489c-a0e6-a13cb007e88
   body: json
   auth: bearer
 }
@@ -16,8 +16,6 @@ auth:bearer {
 
 body:json {
   {
-    "name": "laptop",
-    "stock": 50,
-    "brand_id": "5a5bd445-e9f2-40df-a054-224cedeef1f3"
+    "name": "DELL"
   }
 }

@@ -69,6 +69,9 @@ export class UsersController {
                     throw new BadRequestException(
                         `Unique constraint failed for ${error.meta.target}`,
                     );
+                default:
+                    console.error(error);
+                    throw error;
             }
         }
     }
@@ -92,6 +95,9 @@ export class UsersController {
                     throw new NotFoundException(
                         `No user with the id ${id} was found`,
                     );
+                default:
+                    console.error(error);
+                    throw error;
             }
         }
     }
@@ -116,6 +122,9 @@ export class UsersController {
                     throw new NotFoundException(
                         `No user with the id ${id} was found`,
                     );
+                default:
+                    console.error(error);
+                    throw error;
             }
         }
     }

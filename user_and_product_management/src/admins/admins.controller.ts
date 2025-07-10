@@ -58,7 +58,10 @@ export class AdminsController {
         status: HttpStatus.BAD_REQUEST,
         description: 'One of the properties that must be unique is not unique',
     })
-    @UseGuards(AuthGuardAdmin)
+    @ApiResponse({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        description: `Internal server error`,
+    })
     @ApiBody({ type: CreateAdminDto })
     async create(@Body() dto: CreateAdminDto) {
         try {
@@ -69,6 +72,9 @@ export class AdminsController {
                     throw new BadRequestException(
                         `Unique constraint failed for ${error.meta.target}`,
                     );
+                default:
+                    console.error(error);
+                    throw error;
             }
         }
     }
@@ -82,6 +88,10 @@ export class AdminsController {
         status: HttpStatus.NOT_FOUND,
         description: 'Admin with the given id does not exist',
     })
+    @ApiResponse({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        description: `Internal server error`,
+    })
     @UseGuards(AuthGuardAdmin)
     async delete(@Param('id') id: string) {
         try {
@@ -89,9 +99,12 @@ export class AdminsController {
         } catch (error) {
             switch (error.code) {
                 case 'P2025':
-                    throw new BadRequestException(
+                    throw new NotFoundException(
                         `No admin with the id ${id} was found`,
                     );
+                default:
+                    console.error(error);
+                    throw error;
             }
         }
     }
@@ -105,6 +118,10 @@ export class AdminsController {
         status: HttpStatus.NOT_FOUND,
         description: 'Admin with the given id does not exist',
     })
+    @ApiResponse({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        description: `Internal server error`,
+    })
     @UseGuards(AuthGuardAdmin)
     @ApiBody({ type: UpdateAdminDto })
     async update(@Param('id') id: string, @Body() dto: UpdateAdminDto) {
@@ -113,9 +130,12 @@ export class AdminsController {
         } catch (error) {
             switch (error.code) {
                 case 'P2025':
-                    throw new BadRequestException(
+                    throw new NotFoundException(
                         `No admin with the id ${id} was found`,
                     );
+                default:
+                    console.error(error);
+                    throw error;
             }
         }
     }

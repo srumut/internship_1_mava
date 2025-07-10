@@ -1,23 +1,15 @@
 meta {
-  name: create a product
+  name: brand
   type: http
-  seq: 3
+  seq: 5
 }
 
-post {
-  url: {{host}}/products
-  body: json
+delete {
+  url: {{host}}/brands/5a5bd445-e9f2-40df-a054-224cedeef1f3
+  body: none
   auth: bearer
 }
 
 auth:bearer {
   token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0aG9tYXNhbmRlcnNvbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1MjE0MTY4NSwiZXhwIjoxNzUyMTQ1Mjg1fQ.lADdi5OZ6K7p8dbwFaA36NOW9jOdIO251iu5Eyg6zy0
-}
-
-body:json {
-  {
-    "name": "laptop",
-    "stock": 50,
-    "brand_id": "5a5bd445-e9f2-40df-a054-224cedeef1f3"
-  }
 }

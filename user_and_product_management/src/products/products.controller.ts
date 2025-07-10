@@ -64,13 +64,24 @@ export class ProductsController {
         description: 'Properties thus must be unique are not unique',
     })
     */
+    @ApiResponse({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        description: `Internal server error`,
+    })
     async create(@Body() dto: CreateProductDto) {
         try {
             return await this.service.create(dto);
         } catch (error) {
-            console.error(JSON.stringify(error));
-            console.error(error);
-            throw error;
+            if (error instanceof BadRequestException) throw error;
+            switch (error.code) {
+                case 'P2002':
+                    throw new BadRequestException(
+                        `Unique contraint failed for ${error.meta.target}`,
+                    );
+                default:
+                    console.error(error);
+                    throw error;
+            }
         }
     }
 
@@ -81,8 +92,12 @@ export class ProductsController {
         description: 'Product deleted successfully',
     })
     @ApiResponse({
-        status: HttpStatus.BAD_REQUEST,
+        status: HttpStatus.NOT_FOUND,
         description: 'Product with the given id does not exist',
+    })
+    @ApiResponse({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        description: `Internal server error`,
     })
     async delete(@Param('id') id: string) {
         try {
@@ -90,9 +105,12 @@ export class ProductsController {
         } catch (error) {
             switch (error.code) {
                 case 'P2025':
-                    throw new BadRequestException(
+                    throw new NotFoundException(
                         `No product with the id ${id} was found`,
                     );
+                default:
+                    console.error(error);
+                    throw error;
             }
         }
     }
@@ -104,8 +122,12 @@ export class ProductsController {
         description: 'Product updated successfully',
     })
     @ApiResponse({
-        status: HttpStatus.BAD_REQUEST,
+        status: HttpStatus.NOT_FOUND,
         description: 'Product with the given id does not exist',
+    })
+    @ApiResponse({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        description: `Internal server error`,
     })
     async update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
         try {
@@ -113,9 +135,12 @@ export class ProductsController {
         } catch (error) {
             switch (error.code) {
                 case 'P2025':
-                    throw new BadRequestException(
+                    throw new NotFoundException(
                         `No product with the id ${id} was found`,
                     );
+                default:
+                    console.error(error);
+                    throw error;
             }
         }
     }
