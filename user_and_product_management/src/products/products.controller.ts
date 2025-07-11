@@ -65,10 +65,6 @@ export class ProductsController {
         status: HttpStatus.BAD_REQUEST,
         description: 'Properties thus must be unique are not unique',
     })
-    @ApiResponse({
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        description: `Internal server error`,
-    })
     @UseGuards(AuthGuardAdmin)
     @Post()
     async create(@Body() dto: CreateProductDto) {
@@ -96,10 +92,6 @@ export class ProductsController {
         status: HttpStatus.NOT_FOUND,
         description: 'Product with the given id does not exist',
     })
-    @ApiResponse({
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        description: `Internal server error`,
-    })
     @UseGuards(AuthGuardAdmin)
     @Delete(':id')
     async delete(@Param('id') id: string) {
@@ -125,10 +117,6 @@ export class ProductsController {
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
         description: 'Product with the given id does not exist',
-    })
-    @ApiResponse({
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        description: `Internal server error`,
     })
     @UseGuards(AuthGuardAdmin)
     @Patch(':id')

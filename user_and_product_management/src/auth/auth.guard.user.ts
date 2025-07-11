@@ -27,13 +27,10 @@ export class AuthGuardUser implements CanActivate {
             const payload = await this.jwtService.verifyAsync(token, {
                 secret: jwtConstants.secret,
             });
-            const user = !(await this.db.user.findUnique({
-                where: { id: payload.id },
-            }));
-            if (!user) {
-                console.warn('here');
-                throw Error();
-            }
+            const user = await this.db.user.findUnique({
+                where: { id: payload.sub },
+            });
+            if (!user) throw Error();
 
             request['user'] = payload;
         } catch {

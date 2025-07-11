@@ -11,7 +11,6 @@ import {
     UseGuards,
     HttpStatus,
     Logger,
-    Req,
 } from '@nestjs/common';
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
@@ -63,10 +62,6 @@ export class AdminsController {
         status: HttpStatus.BAD_REQUEST,
         description: 'One of the properties that must be unique is not unique',
     })
-    @ApiResponse({
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        description: `Internal server error`,
-    })
     @ApiBody({ type: CreateAdminDto })
     // TODO(umut): uncomment after you've create an admin to work with
     //@UseGuards(AuthGuardAdmin)
@@ -95,10 +90,6 @@ export class AdminsController {
         status: HttpStatus.NOT_FOUND,
         description: 'Admin with the given id does not exist',
     })
-    @ApiResponse({
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        description: `Internal server error`,
-    })
     @UseGuards(AuthGuardAdmin)
     @Delete(':id')
     async delete(@Param('id') id: string) {
@@ -124,10 +115,6 @@ export class AdminsController {
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
         description: 'Admin with the given id does not exist',
-    })
-    @ApiResponse({
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        description: `Internal server error`,
     })
     @ApiBody({ type: UpdateAdminDto })
     @UseGuards(AuthGuardAdmin)

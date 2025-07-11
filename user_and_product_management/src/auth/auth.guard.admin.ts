@@ -27,10 +27,11 @@ export class AuthGuardAdmin implements CanActivate {
             payload = await this.jwtService.verifyAsync(token, {
                 secret: jwtConstants.secret,
             });
-            const admin = this.db.admin.findUnique({
+            const admin = await this.db.admin.findUnique({
                 where: { id: payload.sub },
             });
             if (!admin) throw Error();
+
             request['user'] = payload;
         } catch {
             throw new UnauthorizedException();

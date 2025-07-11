@@ -1,17 +1,13 @@
 meta {
-  name: all admins
+  name: update admin
   type: http
-  seq: 1
+  seq: 5
 }
 
-get {
-  url: {{host}}/admins
+patch {
+  url: {{host}}/admins/b6289269-6a3e-408e-83a7-5f890e274097
   body: none
   auth: bearer
-}
-
-headers {
-  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0aG9tYXNhbmRlcnNvbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1MjA3NDk3MiwiZXhwIjoxNzUyMDc1MDMyfQ.tmq6Zs5EWalbSTQv01nvGowoKmst0f9hEf_Ga8H6mRw
 }
 
 auth:bearer {

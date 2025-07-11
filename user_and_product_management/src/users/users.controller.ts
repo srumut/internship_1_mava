@@ -19,7 +19,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuardAdmin } from 'src/auth/auth.guard.admin';
 import { AuthGuardUser } from 'src/auth/auth.guard.user';
-import { ApiBody, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Request } from 'express';
 
 @Controller('users')
@@ -30,16 +30,18 @@ export class UsersController {
         this.logger = new Logger(UsersController.name);
     }
 
-    @Get()
+    @ApiOperation({ summary: 'Admin only endpoint to retrieve all the users' })
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully retrieved all the users',
     })
     @UseGuards(AuthGuardAdmin)
+    @Get()
     async findAll() {
         return await this.service.findAll({});
     }
 
+    @ApiOperation({ summary: 'Admin only endpoint to get an user by id' })
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully retrieved the user',
@@ -58,6 +60,7 @@ export class UsersController {
         return user;
     }
 
+    @ApiOperation({ summary: 'Get user by username' })
     @UseGuards(AuthGuardUser)
     @Get('u/:username')
     async findByUsername(
@@ -95,6 +98,7 @@ export class UsersController {
         return resBody;
     }
 
+    @ApiOperation({ summary: 'Create an user' })
     @ApiResponse({
         status: HttpStatus.CREATED,
         description: 'User created successfully',
@@ -104,7 +108,6 @@ export class UsersController {
         description: 'One of the properties that must be unique is not unique',
     })
     @ApiBody({ type: CreateUserDto })
-    @UseGuards(AuthGuardAdmin)
     @Post()
     async create(@Body() dto: CreateUserDto) {
         try {
@@ -122,6 +125,7 @@ export class UsersController {
         }
     }
 
+    @ApiOperation({ summary: 'Admin only endpoint to delete an user by id' })
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully deleted the user',
@@ -148,6 +152,15 @@ export class UsersController {
         }
     }
 
+    @ApiOperation({ summary: 'Delete user by username' })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Successfully deleted the user',
+    })
+    @ApiResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'User with the given id does not exist',
+    })
     @UseGuards(AuthGuardUser)
     @Delete('u/:username')
     async deleteByUsername(
@@ -177,6 +190,7 @@ export class UsersController {
         throw new UnauthorizedException('Unauthorized');
     }
 
+    @ApiOperation({ summary: 'Admin only endpoint to update an user by id' })
     @ApiBody({ type: UpdateUserDto })
     @Patch('id/:id')
     @ApiResponse({
@@ -204,6 +218,16 @@ export class UsersController {
         }
     }
 
+    @ApiOperation({ summary: 'Update user by username' })
+    @ApiBody({ type: UpdateUserDto })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Successfully updated the user',
+    })
+    @ApiResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'User with the given id does not exist',
+    })
     @UseGuards(AuthGuardUser)
     @Patch('u/:username')
     async updateByUsername(
