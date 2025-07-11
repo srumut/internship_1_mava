@@ -6,7 +6,6 @@ import {
     Post,
     Patch,
     Body,
-    BadRequestException,
     NotFoundException,
     UseGuards,
     HttpStatus,
@@ -60,10 +59,14 @@ export class UsersController {
     })
     @ApiBody({ type: CreateUserDto })
     @Post()
+    @UseGuards(AuthGuardAdmin)
     async create(@Body() dto: CreateUserDto) {
+        return await this.service.create(dto);
+        /*
         try {
             return await this.service.create(dto);
         } catch (error) {
+            console.error();
             switch (error.code) {
                 case 'P2002':
                     throw new BadRequestException(
@@ -74,6 +77,7 @@ export class UsersController {
                     throw error;
             }
         }
+            */
     }
 
     @UseGuards(AuthGuardAdmin)
