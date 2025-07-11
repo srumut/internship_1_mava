@@ -7,9 +7,13 @@ meta {
 get {
   url: {{host}}/users
   body: none
-  auth: inherit
+  auth: bearer
 }
 
 headers {
   Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0aG9tYXNhbmRlcnNvbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1MjA3NTE4NywiZXhwIjoxNzUyMDc1MjQ3fQ.xwtinSViruRSWUK1sL0bF4Unc1XlSOEl63tuOD2DxDo
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0aG9tYXNhbmRlcnNvbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1MjE0MTY4NSwiZXhwIjoxNzUyMTQ1Mjg1fQ.lADdi5OZ6K7p8dbwFaA36NOW9jOdIO251iu5Eyg6zy0
 }

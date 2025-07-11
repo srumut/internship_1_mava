@@ -5,13 +5,16 @@ import {
     UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Observable } from 'rxjs';
 import { Request } from 'express';
 import { jwtConstants } from './constants';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class AuthGuardAdmin implements CanActivate {
-    constructor(private readonly jwtService: JwtService) {}
+    constructor(
+        private readonly jwtService: JwtService,
+        private readonly db: DatabaseService,
+    ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest();
@@ -24,7 +27,11 @@ export class AuthGuardAdmin implements CanActivate {
             payload = await this.jwtService.verifyAsync(token, {
                 secret: jwtConstants.secret,
             });
-            request['admin'] = payload;
+            const admin = this.db.admin.findUnique({
+                where: { id: payload.sub },
+            });
+            if (!admin) throw Error();
+            request['user'] = payload;
         } catch {
             throw new UnauthorizedException();
         }

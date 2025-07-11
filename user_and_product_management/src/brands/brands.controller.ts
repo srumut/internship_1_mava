@@ -24,18 +24,16 @@ export class BrandsController {
         this.logger = new Logger(BrandsController.name);
     }
 
-    @UseGuards(AuthGuardAdmin)
-    @Get()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully retrieved all the brands',
     })
+    @UseGuards(AuthGuardAdmin)
+    @Get()
     async findAll() {
         return await this.service.findAll();
     }
 
-    @UseGuards(AuthGuardAdmin)
-    @Get(':id')
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully retrieved the brand',
@@ -44,6 +42,8 @@ export class BrandsController {
         status: HttpStatus.NOT_FOUND,
         description: 'Brand with the given id does not exist',
     })
+    @UseGuards(AuthGuardAdmin)
+    @Get(':id')
     async findById(@Param('id') id: string) {
         const brand = await this.service.findById(id);
         if (!brand)
@@ -51,12 +51,12 @@ export class BrandsController {
         return brand;
     }
 
-    @UseGuards(AuthGuardAdmin)
-    @Post()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Brand created successfully',
     })
+    @UseGuards(AuthGuardAdmin)
+    @Post()
     async create(@Body() dto: CreateBrandDto) {
         try {
             return await this.service.create(dto);
@@ -66,8 +66,6 @@ export class BrandsController {
         }
     }
 
-    @UseGuards(AuthGuardAdmin)
-    @Delete(':id')
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully deleted the brand',
@@ -76,6 +74,8 @@ export class BrandsController {
         status: HttpStatus.NOT_FOUND,
         description: 'Brand with the given id does not exist',
     })
+    @UseGuards(AuthGuardAdmin)
+    @Delete(':id')
     async delete(@Param('id') id: string) {
         try {
             return await this.service.delete(id);
@@ -92,8 +92,6 @@ export class BrandsController {
         }
     }
 
-    @UseGuards(AuthGuardAdmin)
-    @Patch(':id')
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully updated the brand',
@@ -106,6 +104,8 @@ export class BrandsController {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         description: `Internal server error`,
     })
+    @UseGuards(AuthGuardAdmin)
+    @Patch(':id')
     async update(@Param('id') id: string, @Body() dto: UpdateBrandDto) {
         try {
             return await this.service.update(id, dto);

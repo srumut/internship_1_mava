@@ -27,18 +27,16 @@ export class ProductsController {
         this.logger = new Logger(ProductsController.name);
     }
 
-    @UseGuards(AuthGuardUser)
-    @Get()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully retrieved all the products',
     })
+    @UseGuards(AuthGuardUser)
+    @Get()
     async findAll() {
         return await this.service.findAll();
     }
 
-    @UseGuards(AuthGuardUser)
-    @Get(':id')
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully retrieved the product',
@@ -47,6 +45,8 @@ export class ProductsController {
         status: HttpStatus.NOT_FOUND,
         description: 'Product with the given id does not exist',
     })
+    @UseGuards(AuthGuardUser)
+    @Get(':id')
     async findById(@Param('id') id: string) {
         const product = await this.service.findById(id);
         if (!product) {
@@ -57,22 +57,20 @@ export class ProductsController {
         return product;
     }
 
-    @UseGuards(AuthGuardAdmin)
-    @Post()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully created the product',
     })
-    /* TODO(umut): when unique constraint added to product model
     @ApiResponse({
-        status: HttpStatus.BadRequest,
+        status: HttpStatus.BAD_REQUEST,
         description: 'Properties thus must be unique are not unique',
     })
-    */
     @ApiResponse({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         description: `Internal server error`,
     })
+    @UseGuards(AuthGuardAdmin)
+    @Post()
     async create(@Body() dto: CreateProductDto) {
         try {
             return await this.service.create(dto);
@@ -90,8 +88,6 @@ export class ProductsController {
         }
     }
 
-    @UseGuards(AuthGuardAdmin)
-    @Delete(':id')
     @ApiResponse({
         status: HttpStatus.CREATED,
         description: 'Product deleted successfully',
@@ -104,6 +100,8 @@ export class ProductsController {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         description: `Internal server error`,
     })
+    @UseGuards(AuthGuardAdmin)
+    @Delete(':id')
     async delete(@Param('id') id: string) {
         try {
             return await this.service.delete(id);
@@ -120,8 +118,6 @@ export class ProductsController {
         }
     }
 
-    @UseGuards(AuthGuardAdmin)
-    @Patch(':id')
     @ApiResponse({
         status: HttpStatus.CREATED,
         description: 'Product updated successfully',
@@ -134,6 +130,8 @@ export class ProductsController {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         description: `Internal server error`,
     })
+    @UseGuards(AuthGuardAdmin)
+    @Patch(':id')
     async update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
         try {
             return await this.service.update(id, dto);

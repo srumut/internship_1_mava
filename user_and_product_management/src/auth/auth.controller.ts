@@ -28,7 +28,7 @@ export class AuthController {
         if (!bcrypt.compareSync(dto.password, user.password)) {
             throw new BadRequestException('Invalid username or password');
         }
-        const payload = { sub: user.username, role: 'user' };
+        const payload = { sub: user.id, username: user.username, role: 'user' };
         return {
             access_token: await this.jwtService.signAsync(payload),
         };
@@ -44,7 +44,11 @@ export class AuthController {
         if (!bcrypt.compareSync(dto.password, admin.password)) {
             throw new BadRequestException('Invalid username or password');
         }
-        const payload = { sub: admin.username, role: 'admin' };
+        const payload = {
+            sub: admin.id,
+            username: admin.username,
+            role: 'admin',
+        };
         return {
             access_token: await this.jwtService.signAsync(payload),
         };

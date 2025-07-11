@@ -11,6 +11,7 @@ import {
     UseGuards,
     HttpStatus,
     Logger,
+    Req,
 } from '@nestjs/common';
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
@@ -26,17 +27,16 @@ export class AdminsController {
         this.logger = new Logger(AdminsController.name);
     }
 
-    @Get()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully retrieved all the admins',
     })
     @UseGuards(AuthGuardAdmin)
+    @Get()
     async findAll() {
         return await this.service.findAll();
     }
 
-    @Get(':id')
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully retrieved the admin',
@@ -46,6 +46,7 @@ export class AdminsController {
         description: 'Admin with the given id does not exist',
     })
     @UseGuards(AuthGuardAdmin)
+    @Get(':id')
     async findById(@Param('id') id: string) {
         const admin = await this.service.findById(id);
         if (!admin) {
@@ -54,7 +55,6 @@ export class AdminsController {
         return admin;
     }
 
-    @Post()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Admin created successfully',
@@ -68,6 +68,9 @@ export class AdminsController {
         description: `Internal server error`,
     })
     @ApiBody({ type: CreateAdminDto })
+    // TODO(umut): uncomment after you've create an admin to work with
+    //@UseGuards(AuthGuardAdmin)
+    @Post()
     async create(@Body() dto: CreateAdminDto) {
         try {
             return await this.service.create(dto);
@@ -84,7 +87,6 @@ export class AdminsController {
         }
     }
 
-    @Delete(':id')
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully deleted the admin',
@@ -98,6 +100,7 @@ export class AdminsController {
         description: `Internal server error`,
     })
     @UseGuards(AuthGuardAdmin)
+    @Delete(':id')
     async delete(@Param('id') id: string) {
         try {
             return await this.service.delete(id);
@@ -114,7 +117,6 @@ export class AdminsController {
         }
     }
 
-    @Patch(':id')
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully updated the admin',
@@ -127,8 +129,9 @@ export class AdminsController {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         description: `Internal server error`,
     })
-    @UseGuards(AuthGuardAdmin)
     @ApiBody({ type: UpdateAdminDto })
+    @UseGuards(AuthGuardAdmin)
+    @Patch(':id')
     async update(@Param('id') id: string, @Body() dto: UpdateAdminDto) {
         try {
             return await this.service.update(id, dto);

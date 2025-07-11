@@ -1,0 +1,15 @@
+meta {
+  name: user by username
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{host}}/users/u/umut
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NTM1N2EyMy04MjRkLTRjZTYtYWQ3OC04ZDk1ZmEzMmYzNDkiLCJ1c2VybmFtZSI6InVtdXQiLCJyb2xlIjoidXNlciIsImlhdCI6MTc1MjIyNjY2NywiZXhwIjoxNzUyMjMwMjY3fQ.zwGUy221xwI3QJXOUIBo09XnfwWWn2o69v4_6AuhFYE
+}
