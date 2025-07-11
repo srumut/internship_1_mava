@@ -10,17 +10,22 @@ import {
     Post,
     UseGuards,
     HttpStatus,
+    Logger,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuardUser } from 'src/auth/auth.guard.user';
 import { AuthGuardAdmin } from 'src/auth/auth.guard.admin';
-import { ApiBody, ApiResponse } from '@nestjs/swagger';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('products')
 export class ProductsController {
-    constructor(private readonly service: ProductsService) {}
+    private logger: Logger;
+
+    constructor(private readonly service: ProductsService) {
+        this.logger = new Logger(ProductsController.name);
+    }
 
     @UseGuards(AuthGuardUser)
     @Get()
@@ -79,7 +84,7 @@ export class ProductsController {
                         `Unique contraint failed for ${error.meta.target}`,
                     );
                 default:
-                    console.error(error);
+                    this.logger.error(error);
                     throw error;
             }
         }
@@ -109,7 +114,7 @@ export class ProductsController {
                         `No product with the id ${id} was found`,
                     );
                 default:
-                    console.error(error);
+                    this.logger.error(error);
                     throw error;
             }
         }
@@ -139,7 +144,7 @@ export class ProductsController {
                         `No product with the id ${id} was found`,
                     );
                 default:
-                    console.error(error);
+                    this.logger.error(error);
                     throw error;
             }
         }

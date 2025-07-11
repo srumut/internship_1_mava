@@ -10,6 +10,7 @@ import {
     NotFoundException,
     UseGuards,
     HttpStatus,
+    Logger,
 } from '@nestjs/common';
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
@@ -19,7 +20,11 @@ import { ApiBody, ApiResponse } from '@nestjs/swagger';
 
 @Controller('admins')
 export class AdminsController {
-    constructor(private readonly service: AdminsService) {}
+    private logger: Logger;
+
+    constructor(private readonly service: AdminsService) {
+        this.logger = new Logger(AdminsController.name);
+    }
 
     @Get()
     @ApiResponse({
@@ -73,7 +78,7 @@ export class AdminsController {
                         `Unique constraint failed for ${error.meta.target}`,
                     );
                 default:
-                    console.error(error);
+                    this.logger.error(error);
                     throw error;
             }
         }
@@ -103,7 +108,7 @@ export class AdminsController {
                         `No admin with the id ${id} was found`,
                     );
                 default:
-                    console.error(error);
+                    this.logger.error(error);
                     throw error;
             }
         }
@@ -134,7 +139,7 @@ export class AdminsController {
                         `No admin with the id ${id} was found`,
                     );
                 default:
-                    console.error(error);
+                    this.logger.error(error);
                     throw error;
             }
         }

@@ -9,6 +9,7 @@ import {
     Post,
     UseGuards,
     HttpStatus,
+    Logger,
 } from '@nestjs/common';
 import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
@@ -18,7 +19,10 @@ import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('brands')
 export class BrandsController {
-    constructor(private readonly service: BrandsService) {}
+    private logger: Logger;
+    constructor(private readonly service: BrandsService) {
+        this.logger = new Logger(BrandsController.name);
+    }
 
     @UseGuards(AuthGuardAdmin)
     @Get()
@@ -57,7 +61,7 @@ export class BrandsController {
         try {
             return await this.service.create(dto);
         } catch (error) {
-            console.error(error);
+            this.logger.error(error);
             throw error;
         }
     }
@@ -82,7 +86,7 @@ export class BrandsController {
                         `No brand with id ${id} was found`,
                     );
                 default:
-                    console.error(error);
+                    this.logger.error(error);
                     throw error;
             }
         }
@@ -112,7 +116,7 @@ export class BrandsController {
                         `No brand with id ${id} was found`,
                     );
                 default:
-                    console.error(error);
+                    this.logger.error(error);
                     throw error;
             }
         }

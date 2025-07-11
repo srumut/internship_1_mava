@@ -9,6 +9,7 @@ import {
     NotFoundException,
     UseGuards,
     HttpStatus,
+    Logger,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,7 +20,11 @@ import { ApiBody, ApiResponse } from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
-    constructor(private readonly service: UsersService) {}
+    private logger: Logger;
+
+    constructor(private readonly service: UsersService) {
+        this.logger = new Logger(UsersController.name);
+    }
 
     @Get()
     @ApiResponse({
@@ -66,14 +71,14 @@ export class UsersController {
         try {
             return await this.service.create(dto);
         } catch (error) {
-            console.error();
+            this.logger.error();
             switch (error.code) {
                 case 'P2002':
                     throw new BadRequestException(
                         `Unique constraint failed for ${error.meta.target}`,
                     );
                 default:
-                    console.error(error);
+                    this.logger.error(error);
                     throw error;
             }
         }
@@ -100,7 +105,7 @@ export class UsersController {
                         `No user with the id ${id} was found`,
                     );
                 default:
-                    console.error(error);
+                    this.logger.error(error);
                     throw error;
             }
         }
@@ -127,7 +132,7 @@ export class UsersController {
                         `No user with the id ${id} was found`,
                     );
                 default:
-                    console.error(error);
+                    this.logger.error(error);
                     throw error;
             }
         }
