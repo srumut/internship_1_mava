@@ -19,7 +19,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuardAdmin } from 'src/auth/auth.guard.admin';
 import { AuthGuardUser } from 'src/auth/auth.guard.user';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+    ApiBearerAuth,
+    ApiBody,
+    ApiOperation,
+    ApiResponse,
+} from '@nestjs/swagger';
 import { Request } from 'express';
 
 @Controller('users')
@@ -30,6 +35,7 @@ export class UsersController {
         this.logger = new Logger(UsersController.name);
     }
 
+    @ApiBearerAuth()
     @ApiOperation({ summary: 'Admin only endpoint to retrieve all the users' })
     @ApiResponse({
         status: HttpStatus.OK,
@@ -41,6 +47,7 @@ export class UsersController {
         return await this.service.findAll({});
     }
 
+    @ApiBearerAuth()
     @ApiOperation({ summary: 'Admin only endpoint to get an user by id' })
     @ApiResponse({
         status: HttpStatus.OK,
@@ -60,6 +67,7 @@ export class UsersController {
         return user;
     }
 
+    @ApiBearerAuth()
     @ApiOperation({ summary: 'Get user by username' })
     @UseGuards(AuthGuardUser)
     @Get('u/:username')
@@ -125,6 +133,7 @@ export class UsersController {
         }
     }
 
+    @ApiBearerAuth()
     @ApiOperation({ summary: 'Admin only endpoint to delete an user by id' })
     @ApiResponse({
         status: HttpStatus.OK,
@@ -152,6 +161,7 @@ export class UsersController {
         }
     }
 
+    @ApiBearerAuth()
     @ApiOperation({ summary: 'Delete user by username' })
     @ApiResponse({
         status: HttpStatus.OK,
@@ -190,6 +200,7 @@ export class UsersController {
         throw new UnauthorizedException('Unauthorized');
     }
 
+    @ApiBearerAuth()
     @ApiOperation({ summary: 'Admin only endpoint to update an user by id' })
     @ApiBody({ type: UpdateUserDto })
     @Patch('id/:id')
@@ -218,6 +229,7 @@ export class UsersController {
         }
     }
 
+    @ApiBearerAuth()
     @ApiOperation({ summary: 'Update user by username' })
     @ApiBody({ type: UpdateUserDto })
     @ApiResponse({

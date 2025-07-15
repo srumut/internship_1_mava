@@ -15,7 +15,7 @@ import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { AuthGuardAdmin } from 'src/auth/auth.guard.admin';
 import { UpdateBrandDto } from './dto/update-brand.dto';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 
 @Controller('brands')
 export class BrandsController {
@@ -24,6 +24,7 @@ export class BrandsController {
         this.logger = new Logger(BrandsController.name);
     }
 
+    @ApiBearerAuth()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully retrieved all the brands',
@@ -34,6 +35,7 @@ export class BrandsController {
         return await this.service.findAll();
     }
 
+    @ApiBearerAuth()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully retrieved the brand',
@@ -51,6 +53,7 @@ export class BrandsController {
         return brand;
     }
 
+    @ApiBearerAuth()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Brand created successfully',
@@ -66,6 +69,7 @@ export class BrandsController {
         }
     }
 
+    @ApiBearerAuth()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully deleted the brand',
@@ -92,6 +96,7 @@ export class BrandsController {
         }
     }
 
+    @ApiBearerAuth()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully updated the brand',

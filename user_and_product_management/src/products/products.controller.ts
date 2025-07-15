@@ -17,7 +17,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuardUser } from 'src/auth/auth.guard.user';
 import { AuthGuardAdmin } from 'src/auth/auth.guard.admin';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 
 @Controller('products')
 export class ProductsController {
@@ -27,6 +27,7 @@ export class ProductsController {
         this.logger = new Logger(ProductsController.name);
     }
 
+    @ApiBearerAuth()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully retrieved all the products',
@@ -37,6 +38,7 @@ export class ProductsController {
         return await this.service.findAll();
     }
 
+    @ApiBearerAuth()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully retrieved the product',
@@ -57,6 +59,7 @@ export class ProductsController {
         return product;
     }
 
+    @ApiBearerAuth()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully created the product',
@@ -84,6 +87,7 @@ export class ProductsController {
         }
     }
 
+    @ApiBearerAuth()
     @ApiResponse({
         status: HttpStatus.CREATED,
         description: 'Product deleted successfully',
@@ -110,6 +114,7 @@ export class ProductsController {
         }
     }
 
+    @ApiBearerAuth()
     @ApiResponse({
         status: HttpStatus.CREATED,
         description: 'Product updated successfully',

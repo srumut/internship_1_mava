@@ -16,7 +16,7 @@ import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { AuthGuardAdmin } from 'src/auth/auth.guard.admin';
-import { ApiBody, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiResponse } from '@nestjs/swagger';
 
 @Controller('admins')
 export class AdminsController {
@@ -26,6 +26,7 @@ export class AdminsController {
         this.logger = new Logger(AdminsController.name);
     }
 
+    @ApiBearerAuth()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully retrieved all the admins',
@@ -36,6 +37,7 @@ export class AdminsController {
         return await this.service.findAll();
     }
 
+    @ApiBearerAuth()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully retrieved the admin',
@@ -54,6 +56,7 @@ export class AdminsController {
         return admin;
     }
 
+    @ApiBearerAuth()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Admin created successfully',
@@ -82,6 +85,7 @@ export class AdminsController {
         }
     }
 
+    @ApiBearerAuth()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully deleted the admin',
@@ -108,6 +112,7 @@ export class AdminsController {
         }
     }
 
+    @ApiBearerAuth()
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Successfully updated the admin',

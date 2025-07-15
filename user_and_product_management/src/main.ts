@@ -12,6 +12,7 @@ async function bootstrap() {
     );
 
     const config = new DocumentBuilder()
+        .addBearerAuth()
         .setTitle('User and Product Management API')
         .setDescription(
             'Basic user and product management api to practice NestJS, Prisma ORM, Swagger',
