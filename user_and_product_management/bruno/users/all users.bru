@@ -5,9 +5,14 @@ meta {
 }
 
 get {
-  url: {{host}}/users
+  url: {{host}}/users?omit=id
   body: none
   auth: bearer
+}
+
+params:query {
+  omit: id
+  ~omit: merhaba
 }
 
 headers {
@@ -15,5 +20,5 @@ headers {
 }
 
 auth:bearer {
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNjI4OTI2OS02YTNlLTQwOGUtODNhNy01Zjg5MGUyNzQwOTciLCJ1c2VybmFtZSI6InRob21hc2FuZGVyc29uIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzUyMjI4ODQ5LCJleHAiOjE3NTIyMzI0NDl9.66PjJEVEa0u3bzwkQkhkjAq5hMAQ6U7F80iSfLQgYyI
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNjI4OTI2OS02YTNlLTQwOGUtODNhNy01Zjg5MGUyNzQwOTciLCJ1c2VybmFtZSI6InRob21hc2FuZGVyc29uIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzUyNTcwNzg3LCJleHAiOjE3NTI1NzQzODd9.wXXufRWvo-OfmIrlLr1iWIZ2zNg-ekjzgKarBmz4PhE
 }

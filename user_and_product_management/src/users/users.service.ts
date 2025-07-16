@@ -9,17 +9,9 @@ import * as bcrypt from 'bcrypt';
 export class UsersService {
     constructor(private readonly db: DatabaseService) {}
 
-    findAll(omit: {
-        id?: true;
-        username?: true;
-        name?: true;
-        surname?: true;
-        profession?: true;
-        createdAt?: true;
-        updatedAt?: true;
-    }) {
+    findAll() {
         return this.db.user.findMany({
-            omit: { password: true, ...omit },
+            omit: { password: true },
         });
     }
 
@@ -39,18 +31,18 @@ export class UsersService {
                 password: bcrypt.hashSync(dto.password, salt),
                 createdAt: new Date(),
             },
-            omit: { password: true },
+            omit: { password: true, id: true, updatedAt: true },
         });
     }
 
-    delete(id: string, omit?: { id?: true }) {
+    delete(id: string, omit?: { id: true }) {
         return this.db.user.delete({
             where: { id: id },
             omit: { password: true, ...omit },
         });
     }
 
-    update(id: string, dto: UpdateUserDto, omit?: { id?: true }) {
+    update(id: string, dto: UpdateUserDto, omit?: { id: true }) {
         const data = { id, ...dto };
         if (data?.password) {
             const salt = bcrypt.genSaltSync(10);

@@ -7,7 +7,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { jwtConstants } from './constants';
-import { UsersService } from 'src/users/users.service';
 import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
@@ -30,7 +29,12 @@ export class AuthGuardUser implements CanActivate {
             const user = await this.db.user.findUnique({
                 where: { id: payload.sub },
             });
-            if (!user) throw Error();
+            if (!user) {
+                const admin = await this.db.admin.findUnique({
+                    where: { id: payload.sub },
+                });
+                if (!admin) throw Error();
+            }
 
             request['user'] = payload;
         } catch {

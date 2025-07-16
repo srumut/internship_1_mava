@@ -1,6 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { ApiExtraModels } from '@nestjs/swagger';
 import { Profession } from 'generated/prisma';
 
 @ApiExtraModels()

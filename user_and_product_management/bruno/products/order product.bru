@@ -1,0 +1,28 @@
+meta {
+  name: order product
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{host}}/products/orders
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNDBmYzUyZC02YmUyLTQ3ODEtYTNhNi1kN2RmMjI1MjFlMjEiLCJ1c2VybmFtZSI6InRob21hcyIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzUyNjU3Mzc3LCJleHAiOjE3NTI2NjA5Nzd9.D9CxT51jDeW2EmTjbXO3TCrlWWlHNWX_bxyuNVmWI6M
+}
+
+body:json {
+  [
+    {
+      "product_id": "fbcea541-8677-424d-80c3-681ab3991c22",
+      "count": 2
+    },
+    {
+      "product_id": "6583a9f8-f435-4be5-8749-4fb577a27167",
+      "count": 4
+    }
+  ]
+}

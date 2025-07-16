@@ -44,7 +44,7 @@ export class UsersController {
     @UseGuards(AuthGuardAdmin)
     @Get()
     async findAll() {
-        return await this.service.findAll({});
+        return await this.service.findAll();
     }
 
     @ApiBearerAuth()

@@ -11,13 +11,24 @@ import {
     UseGuards,
     HttpStatus,
     Logger,
+    Req,
+    HttpCode,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuardUser } from 'src/auth/auth.guard.user';
 import { AuthGuardAdmin } from 'src/auth/auth.guard.admin';
-import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import {
+    ApiBadRequestResponse,
+    ApiBearerAuth,
+    ApiBody,
+    ApiCreatedResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiOperation,
+} from '@nestjs/swagger';
+import { OrderProductDto } from './dto/order-products.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -28,26 +39,37 @@ export class ProductsController {
     }
 
     @ApiBearerAuth()
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @ApiOperation({ summary: 'Retrieve all products' })
+    @ApiOkResponse({
         description: 'Successfully retrieved all the products',
     })
     @UseGuards(AuthGuardUser)
+    @HttpCode(HttpStatus.OK)
     @Get()
     async findAll() {
         return await this.service.findAll();
     }
 
+    @UseGuards(AuthGuardUser)
+    @HttpCode(HttpStatus.OK)
+    @Get('orders')
+    async findAllOrders(@Req() req: Request) {
+        if (req['user'].role === 'admin') {
+            return await this.service.findAllOrders();
+        }
+        return await this.service.findAllOrdersByUser(req['user'].sub);
+    }
+
     @ApiBearerAuth()
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @ApiOperation({ summary: 'Retrieve product by id' })
+    @ApiOkResponse({
         description: 'Successfully retrieved the product',
     })
-    @ApiResponse({
-        status: HttpStatus.NOT_FOUND,
+    @ApiNotFoundResponse({
         description: 'Product with the given id does not exist',
     })
     @UseGuards(AuthGuardUser)
+    @HttpCode(HttpStatus.OK)
     @Get(':id')
     async findById(@Param('id') id: string) {
         const product = await this.service.findById(id);
@@ -60,15 +82,15 @@ export class ProductsController {
     }
 
     @ApiBearerAuth()
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @ApiOperation({ summary: 'Admin only endpoin to create a product' })
+    @ApiCreatedResponse({
         description: 'Successfully created the product',
     })
-    @ApiResponse({
-        status: HttpStatus.BAD_REQUEST,
+    @ApiBadRequestResponse({
         description: 'Properties thus must be unique are not unique',
     })
     @UseGuards(AuthGuardAdmin)
+    @HttpCode(HttpStatus.CREATED)
     @Post()
     async create(@Body() dto: CreateProductDto) {
         try {
@@ -88,15 +110,17 @@ export class ProductsController {
     }
 
     @ApiBearerAuth()
-    @ApiResponse({
-        status: HttpStatus.CREATED,
+    @ApiOperation({
+        summary: 'Admin only endpoint to delete an existing product',
+    })
+    @ApiOkResponse({
         description: 'Product deleted successfully',
     })
-    @ApiResponse({
-        status: HttpStatus.NOT_FOUND,
+    @ApiNotFoundResponse({
         description: 'Product with the given id does not exist',
     })
     @UseGuards(AuthGuardAdmin)
+    @HttpCode(HttpStatus.OK)
     @Delete(':id')
     async delete(@Param('id') id: string) {
         try {
@@ -115,15 +139,17 @@ export class ProductsController {
     }
 
     @ApiBearerAuth()
-    @ApiResponse({
-        status: HttpStatus.CREATED,
+    @ApiOperation({
+        summary: 'Admin only endpoint to delete an existing product',
+    })
+    @ApiOkResponse({
         description: 'Product updated successfully',
     })
-    @ApiResponse({
-        status: HttpStatus.NOT_FOUND,
+    @ApiNotFoundResponse({
         description: 'Product with the given id does not exist',
     })
     @UseGuards(AuthGuardAdmin)
+    @HttpCode(HttpStatus.OK)
     @Patch(':id')
     async update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
         try {
@@ -139,5 +165,24 @@ export class ProductsController {
                     throw error;
             }
         }
+    }
+
+    @ApiBody({ type: [OrderProductDto] })
+    @ApiOkResponse({ description: 'Products ordered successfully' })
+    @ApiBadRequestResponse({
+        description:
+            'Either an admin tried to order or stock for the one or more products are not enough',
+    })
+    @ApiNotFoundResponse({
+        description: 'One or more products have not enough stock',
+    })
+    @UseGuards(AuthGuardUser)
+    @HttpCode(HttpStatus.OK)
+    @Post('orders')
+    async order(@Req() req: Request, @Body() dtos: OrderProductDto[]) {
+        if (req['user'].role == 'admin') {
+            throw new BadRequestException('Admins can not order any product');
+        }
+        return await this.service.order(req['user'].sub, dtos);
     }
 }
