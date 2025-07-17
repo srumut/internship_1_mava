@@ -22,13 +22,11 @@ import { AuthGuardAdmin } from 'src/auth/auth.guard.admin';
 import {
     ApiBadRequestResponse,
     ApiBearerAuth,
-    ApiBody,
     ApiCreatedResponse,
     ApiNotFoundResponse,
     ApiOkResponse,
     ApiOperation,
 } from '@nestjs/swagger';
-import { OrderProductDto } from './dto/order-products.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -48,16 +46,6 @@ export class ProductsController {
     @Get()
     async findAll() {
         return await this.service.findAll();
-    }
-
-    @UseGuards(AuthGuardUser)
-    @HttpCode(HttpStatus.OK)
-    @Get('orders')
-    async findAllOrders(@Req() req: Request) {
-        if (req['user'].role === 'admin') {
-            return await this.service.findAllOrders();
-        }
-        return await this.service.findAllOrdersByUser(req['user'].sub);
     }
 
     @ApiBearerAuth()
@@ -165,24 +153,5 @@ export class ProductsController {
                     throw error;
             }
         }
-    }
-
-    @ApiBody({ type: [OrderProductDto] })
-    @ApiOkResponse({ description: 'Products ordered successfully' })
-    @ApiBadRequestResponse({
-        description:
-            'Either an admin tried to order or stock for the one or more products are not enough',
-    })
-    @ApiNotFoundResponse({
-        description: 'One or more products have not enough stock',
-    })
-    @UseGuards(AuthGuardUser)
-    @HttpCode(HttpStatus.OK)
-    @Post('orders')
-    async order(@Req() req: Request, @Body() dtos: OrderProductDto[]) {
-        if (req['user'].role == 'admin') {
-            throw new BadRequestException('Admins can not order any product');
-        }
-        return await this.service.order(req['user'].sub, dtos);
     }
 }

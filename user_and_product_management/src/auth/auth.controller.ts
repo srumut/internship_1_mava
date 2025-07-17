@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { ApiBody, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 
 @Controller()
 export class AuthController {
@@ -18,8 +19,10 @@ export class AuthController {
         private readonly jwtService: JwtService,
     ) {}
 
-    @Post('login')
+    @ApiOperation({ summary: 'User login endpoint' })
+    @ApiOkResponse({ description: 'User logged in successfully' })
     @HttpCode(HttpStatus.OK)
+    @Post('login')
     async userLogin(@Body() dto: LoginDto) {
         const user = await this.service.getUser(dto.username);
         if (!user) {
@@ -34,8 +37,10 @@ export class AuthController {
         };
     }
 
-    @Post('admin/login')
+    @ApiOperation({ summary: 'Admin login endpoint' })
+    @ApiOkResponse({ description: 'Admin logged in successfully' })
     @HttpCode(HttpStatus.OK)
+    @Post('admin/login')
     async adminLogin(@Body() dto: LoginDto) {
         const admin = await this.service.getAdmin(dto.username);
         if (!admin) {

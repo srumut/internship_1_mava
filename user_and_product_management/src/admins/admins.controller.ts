@@ -66,8 +66,7 @@ export class AdminsController {
         description: 'One of the properties that must be unique is not unique',
     })
     @ApiBody({ type: CreateAdminDto })
-    // TODO(umut): uncomment after you've create an admin to work with
-    //@UseGuards(AuthGuardAdmin)
+    @UseGuards(AuthGuardAdmin)
     @Post()
     async create(@Body() dto: CreateAdminDto) {
         try {

@@ -1,11 +1,11 @@
 meta {
   name: order product
   type: http
-  seq: 6
+  seq: 9
 }
 
 post {
-  url: {{host}}/products/orders
+  url: {{host}}/users/orders
   body: json
   auth: bearer
 }
@@ -18,11 +18,11 @@ body:json {
   [
     {
       "product_id": "fbcea541-8677-424d-80c3-681ab3991c22",
-      "count": 2
+      "count": 1
     },
     {
       "product_id": "6583a9f8-f435-4be5-8749-4fb577a27167",
-      "count": 4
+      "count": 2
     }
   ]
 }

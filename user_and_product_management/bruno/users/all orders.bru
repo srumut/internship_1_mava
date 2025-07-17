@@ -1,0 +1,15 @@
+meta {
+  name: all orders
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{host}}/users/orders
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNmFlMTY3MC1lNmZhLTQyN2QtYTZjYi04ODNlMjg0YjUzMzgiLCJ1c2VybmFtZSI6InRob21hcyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1MjczODgxNywiZXhwIjoxNzUyNzQyNDE3fQ.6l0WpKUbVoWNZUFhOaI_GMKS0GP5bSWH4DJ08AcmGaI
+}
