@@ -128,6 +128,10 @@ export class AdminsController {
             return await this.service.update(id, dto);
         } catch (error) {
             switch (error.code) {
+                case 'P2002':
+                    throw new BadRequestException(
+                        `Unique contraint failed for ${error.meta.target}`,
+                    );
                 case 'P2025':
                     throw new NotFoundException(
                         `No admin with the id ${id} was found`,

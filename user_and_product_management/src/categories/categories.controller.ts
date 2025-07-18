@@ -4,19 +4,18 @@ import {
     Controller,
     Delete,
     Get,
+    HttpCode,
+    HttpStatus,
+    Logger,
     NotFoundException,
     Param,
     Patch,
     Post,
     UseGuards,
-    HttpStatus,
-    Logger,
-    Req,
-    HttpCode,
 } from '@nestjs/common';
-import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { CategoriesService } from './categories.service';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 import { AuthGuardUser } from 'src/auth/auth.guard.user';
 import { AuthGuardAdmin } from 'src/auth/auth.guard.admin';
 import {
@@ -26,21 +25,21 @@ import {
     ApiNotFoundResponse,
     ApiOkResponse,
     ApiOperation,
+    ApiResponse,
 } from '@nestjs/swagger';
+import { Category } from './types';
 
-@Controller('products')
-export class ProductsController {
+@Controller('categories')
+export class CategoriesController {
     private logger: Logger;
-
-    constructor(private readonly service: ProductsService) {
-        this.logger = new Logger(ProductsController.name);
+    constructor(private readonly service: CategoriesService) {
+        this.logger = new Logger(CategoriesController.name);
     }
 
     @ApiBearerAuth()
-    @ApiOperation({ summary: 'Retrieve all products' })
-    @ApiOkResponse({
-        description: 'Successfully retrieved all the products',
-    })
+    @ApiOperation({ description: 'Retrieve all categories' })
+    @ApiOkResponse({ description: 'Successfully retrieved all categories' })
+    @ApiResponse({ type: [Category] })
     @UseGuards(AuthGuardUser)
     @HttpCode(HttpStatus.OK)
     @Get()
@@ -49,45 +48,37 @@ export class ProductsController {
     }
 
     @ApiBearerAuth()
-    @ApiOperation({ summary: 'Retrieve product by id' })
-    @ApiOkResponse({
-        description: 'Successfully retrieved the product',
-    })
+    @ApiOperation({ description: 'Retrieve a category by id' })
+    @ApiOkResponse({ description: 'Successfully retrieved the category' })
     @ApiNotFoundResponse({
-        description: 'Product with the given id does not exist',
+        description: 'Category with the given id was not found',
     })
+    @ApiResponse({ type: Category })
     @UseGuards(AuthGuardUser)
     @HttpCode(HttpStatus.OK)
     @Get(':id')
     async findById(@Param('id') id: string) {
-        const product = await this.service.findById(id);
-        if (!product) {
+        const category = await this.service.findById(id);
+        if (!category) {
             throw new NotFoundException(
-                `No product with the id ${id} was found`,
+                `Category with the id ${id} was not found`,
             );
         }
-        return product;
+        return category;
     }
 
     @ApiBearerAuth()
-    @ApiOperation({ summary: 'Admin only endpoin to create a product' })
-    @ApiCreatedResponse({
-        description: 'Successfully created the product',
-    })
-    @ApiBadRequestResponse({
-        description: 'Properties thus must be unique are not unique',
-    })
-    @ApiNotFoundResponse({
-        description: 'Brand with the given id does not exists',
-    })
+    @ApiOperation({ summary: 'Admin only endpoint to crate a category' })
+    @ApiCreatedResponse({ description: 'Category created successfully' })
+    @ApiBadRequestResponse({ description: 'Unique constraint failed' })
+    @ApiResponse({ type: Category })
     @UseGuards(AuthGuardAdmin)
     @HttpCode(HttpStatus.CREATED)
     @Post()
-    async create(@Body() dto: CreateProductDto) {
+    async create(@Body() dto: CreateCategoryDto) {
         try {
             return await this.service.create(dto);
         } catch (error) {
-            if (error instanceof NotFoundException) throw error;
             switch (error.code) {
                 case 'P2002':
                     throw new BadRequestException(
@@ -101,15 +92,12 @@ export class ProductsController {
     }
 
     @ApiBearerAuth()
-    @ApiOperation({
-        summary: 'Admin only endpoint to delete an existing product',
-    })
-    @ApiOkResponse({
-        description: 'Product deleted successfully',
-    })
+    @ApiOperation({ summary: 'Admin only endpoint to delete a category' })
+    @ApiOkResponse({ description: 'Successfully deleted the category' })
     @ApiNotFoundResponse({
-        description: 'Product with the given id does not exist',
+        description: 'Category with the given was not found',
     })
+    @ApiResponse({ type: Category })
     @UseGuards(AuthGuardAdmin)
     @HttpCode(HttpStatus.OK)
     @Delete(':id')
@@ -130,19 +118,17 @@ export class ProductsController {
     }
 
     @ApiBearerAuth()
-    @ApiOperation({
-        summary: 'Admin only endpoint to delete an existing product',
-    })
-    @ApiOkResponse({
-        description: 'Product updated successfully',
-    })
+    @ApiOperation({ summary: 'Admin only endpoint to update a category' })
+    @ApiOkResponse({ description: 'Successfully updated the category' })
+    @ApiBadRequestResponse({ description: 'Unique contraint failed' })
     @ApiNotFoundResponse({
-        description: 'Product with the given id does not exist',
+        description: 'Category with the given id was not found',
     })
+    @ApiResponse({ type: Category })
     @UseGuards(AuthGuardAdmin)
     @HttpCode(HttpStatus.OK)
     @Patch(':id')
-    async update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
+    async update(@Param('id') id: string, @Body() dto: UpdateCategoryDto) {
         try {
             return await this.service.update(id, dto);
         } catch (error) {
@@ -153,7 +139,7 @@ export class ProductsController {
                     );
                 case 'P2025':
                     throw new NotFoundException(
-                        `No product with the id ${id} was found`,
+                        `No category with the id ${id} was found`,
                     );
                 default:
                     this.logger.error(error);

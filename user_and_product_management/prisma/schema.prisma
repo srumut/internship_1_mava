@@ -47,6 +47,8 @@ model Product {
     createdAt     DateTime
     updatedAt     DateTime        @updatedAt
     OrderProducts OrderProducts[]
+    category_id   String
+    category      Category        @relation(fields: [category_id], references: [id], onUpdate: Cascade, onDelete: NoAction)
 
     @@unique([brand_id, name])
     @@map("product")
@@ -80,6 +82,15 @@ model OrderProducts {
 
     @@id([order_id, product_id])
     @@map("order_products")
+}
+
+model Category {
+    id          String    @id
+    name        String
+    description String
+    Product     Product[]
+
+    @@map("category")
 }
 
 enum Profession {

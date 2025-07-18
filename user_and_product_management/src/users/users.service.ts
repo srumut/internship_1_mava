@@ -88,6 +88,7 @@ export class UsersService {
                 username: string;
                 product_name: string;
                 product_id: string;
+                category_id: string;
                 brand: string;
                 count: number;
                 time: Date;
@@ -98,6 +99,7 @@ export class UsersService {
             u.username as username,
             p.name as product_name, 
             p.id as product_id,
+            p.category_id as category_id,
             b.name as brand,
             op.count as count,
             o.createdAt as 'time'
@@ -118,6 +120,7 @@ export class UsersService {
                     user_order.products.push({
                         product_id: db_order.product_id,
                         product_name: db_order.product_name,
+                        category_id: db_order.category_id,
                         brand: db_order.brand,
                         count: db_order.count,
                     });
@@ -132,6 +135,7 @@ export class UsersService {
                         {
                             product_id: db_order.product_id,
                             product_name: db_order.product_name,
+                            category_id: db_order.category_id,
                             brand: db_order.brand,
                             count: db_order.count,
                         },
@@ -152,6 +156,7 @@ export class UsersService {
                             {
                                 product_id: db_order.product_id,
                                 product_name: db_order.product_name,
+                                category_id: db_order.category_id,
                                 brand: db_order.brand,
                                 count: db_order.count,
                             },
@@ -170,6 +175,7 @@ export class UsersService {
                 order_id: string;
                 product_id: string;
                 product_name: string;
+                category_id: string;
                 brand: string;
                 count: number;
                 time: Date;
@@ -178,6 +184,7 @@ export class UsersService {
             o.id as order_id,
             p.name as product_name, 
             p.id as product_id,
+            p.category_id as category_id,
             b.name as brand,
             op.count as count,
             o.createdAt as 'time'
@@ -197,6 +204,7 @@ export class UsersService {
                 r.products.push({
                     product_id: order.product_id,
                     product_name: order.product_name,
+                    category_id: order.category_id,
                     brand: order.brand,
                     count: order.count,
                 });
@@ -211,6 +219,7 @@ export class UsersService {
                     {
                         product_id: order.product_id,
                         product_name: order.product_name,
+                        category_id: order.category_id,
                         brand: order.brand,
                         count: order.count,
                     },
@@ -226,6 +235,7 @@ export class UsersService {
         return this.db.$queryRaw`SELECT 
             p.name as product_name, 
             p.id as product_id,
+            p.category_id as p.category_id,
             op.count as count,
             b.name as brand,
             o.createdAt as 'time'

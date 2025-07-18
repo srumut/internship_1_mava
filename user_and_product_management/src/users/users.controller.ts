@@ -251,6 +251,9 @@ export class UsersController {
     @ApiNotFoundResponse({
         description: 'User with the given id does not exist',
     })
+    @ApiBadRequestResponse({
+        description: 'Unique constraint failed for one of the fields',
+    })
     @UseGuards(AuthGuardUser)
     @HttpCode(HttpStatus.OK)
     @Patch('u/:username')
@@ -272,12 +275,19 @@ export class UsersController {
             if (req['user'].role === 'admin') {
                 return await this.service.update(user.id, dto);
             }
-            if (req['user'].sub === user?.id) {
+            if (req['user'].sub === user.id) {
                 return await this.service.update(user.id, dto, { id: true });
             }
         } catch (error) {
-            this.logger.error(error);
-            throw error;
+            switch (error.code) {
+                case 'P2002':
+                    throw new BadRequestException(
+                        `Unique contraint failed for ${error.meta.target}`,
+                    );
+                default:
+                    this.logger.error(error);
+                    throw error;
+            }
         }
         throw new UnauthorizedException('Unauthorized');
     }
@@ -353,7 +363,8 @@ export class UsersController {
                         `Order with id ${order_id} could not be found`,
                     );
                 default:
-                    break;
+                    this.logger.error(error);
+                    throw error;
             }
         }
     }

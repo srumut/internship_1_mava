@@ -16,6 +16,7 @@ import { CreateBrandDto } from './dto/create-brand.dto';
 import { AuthGuardAdmin } from 'src/auth/auth.guard.admin';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { AuthGuardUser } from 'src/auth/auth.guard.user';
 
 @Controller('brands')
 export class BrandsController {
@@ -29,7 +30,7 @@ export class BrandsController {
         status: HttpStatus.OK,
         description: 'Successfully retrieved all the brands',
     })
-    @UseGuards(AuthGuardAdmin)
+    @UseGuards(AuthGuardUser)
     @Get()
     async findAll() {
         return await this.service.findAll();

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { v4 as uuid4 } from 'uuid';
@@ -23,7 +23,7 @@ export class ProductsService {
     async create(dto: CreateProductDto) {
         const brand = await this.brandsService.findById(dto.brand_id);
         if (!brand) {
-            throw new BadRequestException(
+            throw new NotFoundException(
                 `Brand with id ${dto.brand_id} was not found`,
             );
         }

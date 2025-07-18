@@ -13,6 +13,9 @@ export class Product {
 
     @ApiProperty()
     brand: string;
+
+    @ApiProperty()
+    category_id: string;
 }
 
 @ApiExtraModels()
