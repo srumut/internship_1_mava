@@ -25,9 +25,8 @@ import {
     ApiNotFoundResponse,
     ApiOkResponse,
     ApiOperation,
-    ApiResponse,
 } from '@nestjs/swagger';
-import { Category } from './types';
+import { CategoryDto } from './dto/category.dto';
 
 @Controller('categories')
 export class CategoriesController {
@@ -37,9 +36,11 @@ export class CategoriesController {
     }
 
     @ApiBearerAuth()
-    @ApiOperation({ description: 'Retrieve all categories' })
-    @ApiOkResponse({ description: 'Successfully retrieved all categories' })
-    @ApiResponse({ type: [Category] })
+    @ApiOperation({ summary: 'Retrieve all categories' })
+    @ApiOkResponse({
+        description: 'Successfully retrieved all categories',
+        type: [CategoryDto],
+    })
     @UseGuards(AuthGuardUser)
     @HttpCode(HttpStatus.OK)
     @Get()
@@ -48,12 +49,14 @@ export class CategoriesController {
     }
 
     @ApiBearerAuth()
-    @ApiOperation({ description: 'Retrieve a category by id' })
-    @ApiOkResponse({ description: 'Successfully retrieved the category' })
+    @ApiOperation({ summary: 'Retrieve a category by id' })
+    @ApiOkResponse({
+        description: 'Successfully retrieved the category',
+        type: CategoryDto,
+    })
     @ApiNotFoundResponse({
         description: 'Category with the given id was not found',
     })
-    @ApiResponse({ type: Category })
     @UseGuards(AuthGuardUser)
     @HttpCode(HttpStatus.OK)
     @Get(':id')
@@ -69,9 +72,11 @@ export class CategoriesController {
 
     @ApiBearerAuth()
     @ApiOperation({ summary: 'Admin only endpoint to crate a category' })
-    @ApiCreatedResponse({ description: 'Category created successfully' })
+    @ApiCreatedResponse({
+        description: 'Category created successfully',
+        type: CategoryDto,
+    })
     @ApiBadRequestResponse({ description: 'Unique constraint failed' })
-    @ApiResponse({ type: Category })
     @UseGuards(AuthGuardAdmin)
     @HttpCode(HttpStatus.CREATED)
     @Post()
@@ -93,11 +98,13 @@ export class CategoriesController {
 
     @ApiBearerAuth()
     @ApiOperation({ summary: 'Admin only endpoint to delete a category' })
-    @ApiOkResponse({ description: 'Successfully deleted the category' })
+    @ApiOkResponse({
+        description: 'Successfully deleted the category',
+        type: CategoryDto,
+    })
     @ApiNotFoundResponse({
         description: 'Category with the given was not found',
     })
-    @ApiResponse({ type: Category })
     @UseGuards(AuthGuardAdmin)
     @HttpCode(HttpStatus.OK)
     @Delete(':id')
@@ -119,12 +126,14 @@ export class CategoriesController {
 
     @ApiBearerAuth()
     @ApiOperation({ summary: 'Admin only endpoint to update a category' })
-    @ApiOkResponse({ description: 'Successfully updated the category' })
+    @ApiOkResponse({
+        description: 'Successfully updated the category',
+        type: CategoryDto,
+    })
     @ApiBadRequestResponse({ description: 'Unique contraint failed' })
     @ApiNotFoundResponse({
         description: 'Category with the given id was not found',
     })
-    @ApiResponse({ type: Category })
     @UseGuards(AuthGuardAdmin)
     @HttpCode(HttpStatus.OK)
     @Patch(':id')

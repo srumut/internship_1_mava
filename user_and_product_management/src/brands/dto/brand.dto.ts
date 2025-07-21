@@ -1,15 +1,16 @@
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
 
 @ApiExtraModels()
-export class CreateBrandDto {
+export class BrandDto {
     @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
     id: string;
 
     @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
     name: string;
+
+    @ApiProperty()
+    createdAt: Date;
+
+    @ApiProperty()
+    updatedAt: Date;
 }

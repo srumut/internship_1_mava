@@ -89,6 +89,8 @@ model Category {
     name        String
     description String
     Product     Product[]
+    createdAt   DateTime
+    updatedAt   DateTime  @updatedAt
 
     @@map("category")
 }

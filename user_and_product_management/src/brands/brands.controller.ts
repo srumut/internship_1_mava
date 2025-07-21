@@ -8,15 +8,20 @@ import {
     Patch,
     Post,
     UseGuards,
-    HttpStatus,
     Logger,
 } from '@nestjs/common';
 import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { AuthGuardAdmin } from 'src/auth/auth.guard.admin';
 import { UpdateBrandDto } from './dto/update-brand.dto';
-import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import {
+    ApiBearerAuth,
+    ApiCreatedResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+} from '@nestjs/swagger';
 import { AuthGuardUser } from 'src/auth/auth.guard.user';
+import { BrandDto } from './dto/brand.dto';
 
 @Controller('brands')
 export class BrandsController {
@@ -26,9 +31,9 @@ export class BrandsController {
     }
 
     @ApiBearerAuth()
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @ApiOkResponse({
         description: 'Successfully retrieved all the brands',
+        type: [BrandDto],
     })
     @UseGuards(AuthGuardUser)
     @Get()
@@ -37,12 +42,11 @@ export class BrandsController {
     }
 
     @ApiBearerAuth()
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @ApiOkResponse({
         description: 'Successfully retrieved the brand',
+        type: BrandDto,
     })
-    @ApiResponse({
-        status: HttpStatus.NOT_FOUND,
+    @ApiNotFoundResponse({
         description: 'Brand with the given id does not exist',
     })
     @UseGuards(AuthGuardAdmin)
@@ -55,9 +59,9 @@ export class BrandsController {
     }
 
     @ApiBearerAuth()
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @ApiCreatedResponse({
         description: 'Brand created successfully',
+        type: BrandDto,
     })
     @UseGuards(AuthGuardAdmin)
     @Post()
@@ -71,12 +75,11 @@ export class BrandsController {
     }
 
     @ApiBearerAuth()
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @ApiOkResponse({
         description: 'Successfully deleted the brand',
+        type: BrandDto,
     })
-    @ApiResponse({
-        status: HttpStatus.NOT_FOUND,
+    @ApiNotFoundResponse({
         description: 'Brand with the given id does not exist',
     })
     @UseGuards(AuthGuardAdmin)
@@ -98,17 +101,12 @@ export class BrandsController {
     }
 
     @ApiBearerAuth()
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @ApiOkResponse({
         description: 'Successfully updated the brand',
+        type: BrandDto,
     })
-    @ApiResponse({
-        status: HttpStatus.NOT_FOUND,
+    @ApiNotFoundResponse({
         description: 'Brand with the given id does not exist',
-    })
-    @ApiResponse({
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        description: `Internal server error`,
     })
     @UseGuards(AuthGuardAdmin)
     @Patch(':id')

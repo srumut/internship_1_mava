@@ -21,5 +21,9 @@ export class DatabaseService extends PrismaClient implements OnModuleInit {
                 },
             });
         }
+
+        const categories = await this.category.findMany();
+        if (categories.length === 0) {
+        }
     }
 }

@@ -11,11 +11,9 @@ import {
     UseGuards,
     HttpStatus,
     Logger,
-    Req,
     HttpCode,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuardUser } from 'src/auth/auth.guard.user';
 import { AuthGuardAdmin } from 'src/auth/auth.guard.admin';
@@ -27,6 +25,8 @@ import {
     ApiOkResponse,
     ApiOperation,
 } from '@nestjs/swagger';
+import { ProductDto } from './dto/product.dto';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -40,6 +40,7 @@ export class ProductsController {
     @ApiOperation({ summary: 'Retrieve all products' })
     @ApiOkResponse({
         description: 'Successfully retrieved all the products',
+        type: [ProductDto],
     })
     @UseGuards(AuthGuardUser)
     @HttpCode(HttpStatus.OK)
@@ -52,6 +53,7 @@ export class ProductsController {
     @ApiOperation({ summary: 'Retrieve product by id' })
     @ApiOkResponse({
         description: 'Successfully retrieved the product',
+        type: ProductDto,
     })
     @ApiNotFoundResponse({
         description: 'Product with the given id does not exist',
@@ -73,6 +75,7 @@ export class ProductsController {
     @ApiOperation({ summary: 'Admin only endpoin to create a product' })
     @ApiCreatedResponse({
         description: 'Successfully created the product',
+        type: ProductDto,
     })
     @ApiBadRequestResponse({
         description: 'Properties thus must be unique are not unique',
@@ -106,6 +109,7 @@ export class ProductsController {
     })
     @ApiOkResponse({
         description: 'Product deleted successfully',
+        type: ProductDto,
     })
     @ApiNotFoundResponse({
         description: 'Product with the given id does not exist',
@@ -135,6 +139,7 @@ export class ProductsController {
     })
     @ApiOkResponse({
         description: 'Product updated successfully',
+        type: ProductDto,
     })
     @ApiNotFoundResponse({
         description: 'Product with the given id does not exist',

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { v4 as uuid4 } from 'uuid';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
@@ -19,8 +18,8 @@ export class CategoriesService {
     create(dto: CreateCategoryDto) {
         return this.db.category.create({
             data: {
-                id: uuid4(),
                 ...dto,
+                createdAt: new Date(),
             },
         });
     }

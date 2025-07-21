@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateProductDto } from './dto/create-product.dto';
-import { v4 as uuid4 } from 'uuid';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { BrandsService } from 'src/brands/brands.service';
 
@@ -29,7 +28,6 @@ export class ProductsService {
         }
         return this.db.product.create({
             data: {
-                id: uuid4(),
                 ...dto,
                 createdAt: new Date(),
                 brand_id: brand.id,
