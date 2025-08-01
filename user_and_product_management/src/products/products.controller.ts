@@ -9,9 +9,10 @@ import {
     Patch,
     Post,
     UseGuards,
-    HttpStatus,
     Logger,
-    HttpCode,
+    Req,
+    Query,
+    ParseIntPipe,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -19,13 +20,13 @@ import { AuthGuardUser } from 'src/auth/auth.guard.user';
 import { AuthGuardAdmin } from 'src/auth/auth.guard.admin';
 import {
     ApiBadRequestResponse,
-    ApiBearerAuth,
     ApiCreatedResponse,
     ApiNotFoundResponse,
     ApiOkResponse,
     ApiOperation,
+    ApiQuery,
 } from '@nestjs/swagger';
-import { ProductDto } from './dto/product.dto';
+import { ProductRespDto } from './dto/product-resp.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 
 @Controller('products')
@@ -36,30 +37,32 @@ export class ProductsController {
         this.logger = new Logger(ProductsController.name);
     }
 
-    @ApiBearerAuth()
     @ApiOperation({ summary: 'Retrieve all products' })
     @ApiOkResponse({
         description: 'Successfully retrieved all the products',
-        type: [ProductDto],
+        type: [ProductRespDto],
     })
     @UseGuards(AuthGuardUser)
-    @HttpCode(HttpStatus.OK)
+    @ApiQuery({ name: 'deneme', required: false, type: 'string' })
+    @ApiQuery({ name: 'branch_id', required: false, type: 'string' })
+    @ApiQuery({ name: 'company_id', required: false, type: 'string' })
+    @ApiQuery({ name: 'category_id', required: false, type: 'string' })
+    @ApiQuery({ name: 'min_stock', required: false, type: 'number' })
+    @ApiQuery({ name: 'max_stock', required: false, type: 'number' })
     @Get()
-    async findAll() {
-        return await this.service.findAll();
+    async findAll(@Req() req: Request) {
+        return await this.service.findAll(req['query']);
     }
 
-    @ApiBearerAuth()
     @ApiOperation({ summary: 'Retrieve product by id' })
     @ApiOkResponse({
         description: 'Successfully retrieved the product',
-        type: ProductDto,
+        type: ProductRespDto,
     })
     @ApiNotFoundResponse({
         description: 'Product with the given id does not exist',
     })
     @UseGuards(AuthGuardUser)
-    @HttpCode(HttpStatus.OK)
     @Get(':id')
     async findById(@Param('id') id: string) {
         const product = await this.service.findById(id);
@@ -71,20 +74,18 @@ export class ProductsController {
         return product;
     }
 
-    @ApiBearerAuth()
     @ApiOperation({ summary: 'Admin only endpoin to create a product' })
     @ApiCreatedResponse({
         description: 'Successfully created the product',
-        type: ProductDto,
+        type: ProductRespDto,
     })
     @ApiBadRequestResponse({
         description: 'Properties thus must be unique are not unique',
     })
     @ApiNotFoundResponse({
-        description: 'Brand with the given id does not exists',
+        description: 'Company with the given id does not exists',
     })
     @UseGuards(AuthGuardAdmin)
-    @HttpCode(HttpStatus.CREATED)
     @Post()
     async create(@Body() dto: CreateProductDto) {
         try {
@@ -96,6 +97,12 @@ export class ProductsController {
                     throw new BadRequestException(
                         `Unique contraint failed for ${error.meta.target}`,
                     );
+                // NOTE(umut): if branch exist or not is checked within the
+                // service, so P2003 can only mean bad company_id
+                case 'P2003':
+                    throw new NotFoundException(
+                        `Category with the id ${dto.category_id} was not found`,
+                    );
                 default:
                     this.logger.error(error);
                     throw error;
@@ -103,19 +110,17 @@ export class ProductsController {
         }
     }
 
-    @ApiBearerAuth()
     @ApiOperation({
         summary: 'Admin only endpoint to delete an existing product',
     })
     @ApiOkResponse({
         description: 'Product deleted successfully',
-        type: ProductDto,
+        type: ProductRespDto,
     })
     @ApiNotFoundResponse({
         description: 'Product with the given id does not exist',
     })
     @UseGuards(AuthGuardAdmin)
-    @HttpCode(HttpStatus.OK)
     @Delete(':id')
     async delete(@Param('id') id: string) {
         try {
@@ -133,19 +138,17 @@ export class ProductsController {
         }
     }
 
-    @ApiBearerAuth()
     @ApiOperation({
         summary: 'Admin only endpoint to delete an existing product',
     })
     @ApiOkResponse({
         description: 'Product updated successfully',
-        type: ProductDto,
+        type: ProductRespDto,
     })
     @ApiNotFoundResponse({
         description: 'Product with the given id does not exist',
     })
     @UseGuards(AuthGuardAdmin)
-    @HttpCode(HttpStatus.OK)
     @Patch(':id')
     async update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
         try {

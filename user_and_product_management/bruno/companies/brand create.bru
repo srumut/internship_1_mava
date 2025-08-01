@@ -1,0 +1,25 @@
+meta {
+  name: company create
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{host}}/companies
+  body: json
+  auth: bearer
+}
+
+params:query {
+  : 
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNjI4OTI2OS02YTNlLTQwOGUtODNhNy01Zjg5MGUyNzQwOTciLCJ1c2VybmFtZSI6InRob21hc2FuZGVyc29uIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzUyNTc0MDk0LCJleHAiOjE3NTI1Nzc2OTR9.7TdiNv9WKfNiAEmpVSZMU56NSpPRgadGmrd361jr2rI
+}
+
+body:json {
+  {
+    "name": "Dell"
+  }
+}

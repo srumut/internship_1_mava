@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { jwtConstants } from './constants';
 import { DatabaseService } from 'src/database/database.service';
+import { error } from 'console';
 
 @Injectable()
 export class AuthGuardUser implements CanActivate {
@@ -37,7 +38,7 @@ export class AuthGuardUser implements CanActivate {
             }
 
             request['user'] = payload;
-        } catch {
+        } catch (e) {
             throw new UnauthorizedException();
         }
         return true;

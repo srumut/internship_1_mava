@@ -6,9 +6,9 @@ import { ProductsModule } from './products/products.module';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { AdminsModule } from './admins/admins.module';
-import { BrandsModule } from './brands/brands.module';
 import { LoggerMiddleware } from './logger.middleware';
 import { CategoriesModule } from './categories/categories.module';
+import { CompaniesModule } from './companies/companies.module';
 
 @Module({
     imports: [
@@ -17,7 +17,7 @@ import { CategoriesModule } from './categories/categories.module';
         DatabaseModule,
         AuthModule,
         AdminsModule,
-        BrandsModule,
+        CompaniesModule,
         CategoriesModule,
     ],
     controllers: [AppController],

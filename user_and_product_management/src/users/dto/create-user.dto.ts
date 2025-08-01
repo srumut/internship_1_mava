@@ -1,30 +1,25 @@
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { Profession } from 'generated/prisma';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 @ApiExtraModels()
 export class CreateUserDto {
-    @ApiProperty()
+    @ApiProperty({ example: 'domm' })
     @IsString()
     @IsNotEmpty()
     username: string;
 
-    @ApiProperty()
+    @ApiProperty({ example: 'malmiles' })
     @IsString()
     @IsNotEmpty()
     password: string;
 
-    @ApiProperty()
+    @ApiProperty({ example: 'Dominick' })
     @IsString()
     @IsNotEmpty()
     name: string;
 
-    @ApiProperty()
+    @ApiProperty({ example: 'Cobb' })
     @IsString()
     @IsNotEmpty()
     surname: string;
-
-    @ApiProperty()
-    @IsEnum(Profession)
-    profession: Profession;
 }

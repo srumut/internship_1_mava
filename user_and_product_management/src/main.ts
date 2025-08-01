@@ -13,6 +13,7 @@ async function bootstrap() {
 
     const config = new DocumentBuilder()
         .addBearerAuth()
+        .addSecurityRequirements('bearer')
         .setTitle('User and Product Management API')
         .setDescription(
             'Basic user and product management api to practice NestJS, Prisma ORM, Swagger',
@@ -23,6 +24,10 @@ async function bootstrap() {
     const documentFactory = () => SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('swagger', app, documentFactory, {
         jsonDocumentUrl: 'swagger/json',
+        swaggerOptions: {
+            defaultModelExpandDepth: 7,
+            defaultModelsExpandDepth: 7,
+        },
     });
 
     await app.listen(process.env.PORT ?? 3000);

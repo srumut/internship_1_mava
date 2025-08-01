@@ -1,0 +1,15 @@
+meta {
+  name: update by id
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{host}}/categories/{id}
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

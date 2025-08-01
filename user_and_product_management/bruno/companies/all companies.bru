@@ -1,25 +1,15 @@
 meta {
-  name: create a product
+  name: all companies
   type: http
-  seq: 3
+  seq: 1
 }
 
-post {
-  url: {{host}}/products
-  body: json
+get {
+  url: {{host}}/companies
+  body: none
   auth: bearer
 }
 
 auth:bearer {
   token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMDBjYTQxMi01MjQ4LTRlNjItYTQxZS1hZTA5N2M1MmQzMTYiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzUzNjg1NTE5LCJleHAiOjE3NTM2ODkxMTl9.Eofnijjsr3mmDnQpXZ9qp2W2ByCPlDeXRNw5akUCPD0
-}
-
-body:json {
-  {
-    "id": "gamng-laptop",
-    "name": "Dell Gaming Lapto",
-    "stock": 50,
-    "branch_id": "3c520d6b-cab3-44e7-8346-c33df8aceb93",
-    "category_id": "electronic"
-  }
 }

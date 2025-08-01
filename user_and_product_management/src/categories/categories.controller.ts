@@ -4,8 +4,6 @@ import {
     Controller,
     Delete,
     Get,
-    HttpCode,
-    HttpStatus,
     Logger,
     NotFoundException,
     Param,
@@ -20,7 +18,6 @@ import { AuthGuardUser } from 'src/auth/auth.guard.user';
 import { AuthGuardAdmin } from 'src/auth/auth.guard.admin';
 import {
     ApiBadRequestResponse,
-    ApiBearerAuth,
     ApiCreatedResponse,
     ApiNotFoundResponse,
     ApiOkResponse,
@@ -35,20 +32,17 @@ export class CategoriesController {
         this.logger = new Logger(CategoriesController.name);
     }
 
-    @ApiBearerAuth()
     @ApiOperation({ summary: 'Retrieve all categories' })
     @ApiOkResponse({
         description: 'Successfully retrieved all categories',
         type: [CategoryDto],
     })
     @UseGuards(AuthGuardUser)
-    @HttpCode(HttpStatus.OK)
     @Get()
     async findAll() {
         return await this.service.findAll();
     }
 
-    @ApiBearerAuth()
     @ApiOperation({ summary: 'Retrieve a category by id' })
     @ApiOkResponse({
         description: 'Successfully retrieved the category',
@@ -58,7 +52,6 @@ export class CategoriesController {
         description: 'Category with the given id was not found',
     })
     @UseGuards(AuthGuardUser)
-    @HttpCode(HttpStatus.OK)
     @Get(':id')
     async findById(@Param('id') id: string) {
         const category = await this.service.findById(id);
@@ -70,7 +63,6 @@ export class CategoriesController {
         return category;
     }
 
-    @ApiBearerAuth()
     @ApiOperation({ summary: 'Admin only endpoint to crate a category' })
     @ApiCreatedResponse({
         description: 'Category created successfully',
@@ -78,7 +70,6 @@ export class CategoriesController {
     })
     @ApiBadRequestResponse({ description: 'Unique constraint failed' })
     @UseGuards(AuthGuardAdmin)
-    @HttpCode(HttpStatus.CREATED)
     @Post()
     async create(@Body() dto: CreateCategoryDto) {
         try {
@@ -96,7 +87,6 @@ export class CategoriesController {
         }
     }
 
-    @ApiBearerAuth()
     @ApiOperation({ summary: 'Admin only endpoint to delete a category' })
     @ApiOkResponse({
         description: 'Successfully deleted the category',
@@ -106,7 +96,6 @@ export class CategoriesController {
         description: 'Category with the given was not found',
     })
     @UseGuards(AuthGuardAdmin)
-    @HttpCode(HttpStatus.OK)
     @Delete(':id')
     async delete(@Param('id') id: string) {
         try {
@@ -124,7 +113,6 @@ export class CategoriesController {
         }
     }
 
-    @ApiBearerAuth()
     @ApiOperation({ summary: 'Admin only endpoint to update a category' })
     @ApiOkResponse({
         description: 'Successfully updated the category',
@@ -135,7 +123,6 @@ export class CategoriesController {
         description: 'Category with the given id was not found',
     })
     @UseGuards(AuthGuardAdmin)
-    @HttpCode(HttpStatus.OK)
     @Patch(':id')
     async update(@Param('id') id: string, @Body() dto: UpdateCategoryDto) {
         try {

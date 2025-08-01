@@ -1,0 +1,21 @@
+meta {
+  name: company update
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{host}}/companies/a1d1c67f-1f63-489c-a0e6-a13cb007e88
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0aG9tYXNhbmRlcnNvbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1MjE0MTY4NSwiZXhwIjoxNzUyMTQ1Mjg1fQ.lADdi5OZ6K7p8dbwFaA36NOW9jOdIO251iu5Eyg6zy0
+}
+
+body:json {
+  {
+    "name": "DELL"
+  }
+}

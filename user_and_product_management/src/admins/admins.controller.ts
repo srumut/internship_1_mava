@@ -9,14 +9,20 @@ import {
     BadRequestException,
     NotFoundException,
     UseGuards,
-    HttpStatus,
     Logger,
 } from '@nestjs/common';
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { AuthGuardAdmin } from 'src/auth/auth.guard.admin';
-import { ApiBearerAuth, ApiBody, ApiResponse } from '@nestjs/swagger';
+import {
+    ApiBadRequestResponse,
+    ApiBody,
+    ApiCreatedResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiOperation,
+} from '@nestjs/swagger';
 
 @Controller('admins')
 export class AdminsController {
@@ -26,9 +32,8 @@ export class AdminsController {
         this.logger = new Logger(AdminsController.name);
     }
 
-    @ApiBearerAuth()
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @ApiOperation({ summary: 'Admin only, retrieve all admins' })
+    @ApiOkResponse({
         description: 'Successfully retrieved all the admins',
     })
     @UseGuards(AuthGuardAdmin)
@@ -37,13 +42,11 @@ export class AdminsController {
         return await this.service.findAll();
     }
 
-    @ApiBearerAuth()
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @ApiOperation({ summary: 'Admin only, retrieve the admin by id' })
+    @ApiOkResponse({
         description: 'Successfully retrieved the admin',
     })
-    @ApiResponse({
-        status: HttpStatus.NOT_FOUND,
+    @ApiNotFoundResponse({
         description: 'Admin with the given id does not exist',
     })
     @UseGuards(AuthGuardAdmin)
@@ -56,13 +59,11 @@ export class AdminsController {
         return admin;
     }
 
-    @ApiBearerAuth()
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @ApiOperation({ summary: 'Admin only, create an admin' })
+    @ApiCreatedResponse({
         description: 'Admin created successfully',
     })
-    @ApiResponse({
-        status: HttpStatus.BAD_REQUEST,
+    @ApiBadRequestResponse({
         description: 'One of the properties that must be unique is not unique',
     })
     @ApiBody({ type: CreateAdminDto })
@@ -84,13 +85,11 @@ export class AdminsController {
         }
     }
 
-    @ApiBearerAuth()
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @ApiOperation({ summary: 'Admin only, delete an admin by id' })
+    @ApiOkResponse({
         description: 'Successfully deleted the admin',
     })
-    @ApiResponse({
-        status: HttpStatus.NOT_FOUND,
+    @ApiNotFoundResponse({
         description: 'Admin with the given id does not exist',
     })
     @UseGuards(AuthGuardAdmin)
@@ -111,13 +110,11 @@ export class AdminsController {
         }
     }
 
-    @ApiBearerAuth()
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @ApiOperation({ summary: 'Admin only, update an admin' })
+    @ApiOkResponse({
         description: 'Successfully updated the admin',
     })
-    @ApiResponse({
-        status: HttpStatus.NOT_FOUND,
+    @ApiNotFoundResponse({
         description: 'Admin with the given id does not exist',
     })
     @ApiBody({ type: UpdateAdminDto })

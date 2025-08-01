@@ -21,7 +21,7 @@ export class CreateProductDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    brand_id: string;
+    branch_id: string;
 
     @ApiProperty()
     @IsString()

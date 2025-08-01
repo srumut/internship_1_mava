@@ -1,16 +1,11 @@
-import {
-    Body,
-    Controller,
-    HttpStatus,
-    Post,
-    HttpCode,
-    BadRequestException,
-} from '@nestjs/common';
+import { Body, Controller, Post, BadRequestException } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { ApiBody, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { AdminLoginDto } from './dto/admin-login.dto';
+import { UserLoginDto } from './dto/user-login.dto';
+import { Public } from 'src/public.decorator';
 
 @Controller()
 export class AuthController {
@@ -19,11 +14,11 @@ export class AuthController {
         private readonly jwtService: JwtService,
     ) {}
 
+    @Public()
     @ApiOperation({ summary: 'User login endpoint' })
     @ApiOkResponse({ description: 'User logged in successfully' })
-    @HttpCode(HttpStatus.OK)
     @Post('login')
-    async userLogin(@Body() dto: LoginDto) {
+    async userLogin(@Body() dto: UserLoginDto) {
         const user = await this.service.getUser(dto.username);
         if (!user) {
             throw new BadRequestException('Invalid username or password');
@@ -37,11 +32,11 @@ export class AuthController {
         };
     }
 
+    @Public()
     @ApiOperation({ summary: 'Admin login endpoint' })
     @ApiOkResponse({ description: 'Admin logged in successfully' })
-    @HttpCode(HttpStatus.OK)
     @Post('admin/login')
-    async adminLogin(@Body() dto: LoginDto) {
+    async adminLogin(@Body() dto: AdminLoginDto) {
         const admin = await this.service.getAdmin(dto.username);
         if (!admin) {
             throw new BadRequestException('Invalid username or password');

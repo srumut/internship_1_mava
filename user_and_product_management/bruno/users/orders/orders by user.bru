@@ -1,0 +1,15 @@
+meta {
+  name: orders by user
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{host}}/users/u/thomas/orders
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNDBmYzUyZC02YmUyLTQ3ODEtYTNhNi1kN2RmMjI1MjFlMjEiLCJ1c2VybmFtZSI6InRob21hcyIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzUyNzU2MDk1LCJleHAiOjE3NTI3NTk2OTV9.NdGL02DqZB3YWxrmgrniLUTHjb-uI1dM9PxN6ANvT4o
+}

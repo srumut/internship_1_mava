@@ -1,0 +1,15 @@
+meta {
+  name: by id delete
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{host}}/categories/{id}
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
